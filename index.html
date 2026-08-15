@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta name="theme-color" content="#0b2f66">
+
+  <title>SIGA SV</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- =========================================
+         ENCABEZADO PRINCIPAL
+    ========================================== -->
+    <header class="topbar">
+
+      <div>
+        <div class="brand">
+          SIGA SV
+        </div>
+
+        <div class="subtitle">
+          Sistema Inteligente de Gestión de Actas
+        </div>
+      </div>
+
+      <button
+        class="icon-button"
+        id="menuButton"
+        type="button"
+        aria-label="Abrir menú"
+      >
+        ☰
+      </button>
+
+    </header>
+
+
+    <!-- =========================================
+         CONTENIDO PRINCIPAL
+    ========================================== -->
+    <main class="content">
+
+
+      <!-- =====================================
+           PANTALLA: INICIO
+      ====================================== -->
+      <section
+        id="screen-home"
+        class="screen active"
+      >
+
+        <div class="welcome-card">
+
+          <h1>SIGA SV</h1>
+
+          <p class="welcome-title">
+            Sistema Inteligente de Gestión de Actas
+          </p>
+
+          <p>
+            Cree y organice documentos de forma
+            rápida, ordenada y editable.
+          </p>
+
+          <button
+            class="primary-button"
+            id="newActButton"
+            type="button"
+          >
+            ＋ NUEVA ACTA
+          </button>
+
+        </div>
+
+
+        <!-- MENÚ PRINCIPAL -->
+        <div class="grid-menu">
+
+          <button
+            class="menu-card"
+            type="button"
+            data-target="screen-persons"
+          >
+            <span class="menu-icon">
+              👤
+            </span>
+
+            <strong>
+              PERSONAS / DUI
+            </strong>
+
+            <small>
+              Buscar o registrar personas
+            </small>
+          </button>
+
+
+          <button
+            class="menu-card"
+            type="button"
+            data-target="screen-agents"
+          >
+            <span class="menu-icon">
+              👮
+            </span>
+
+            <strong>
+              AGENTES
+            </strong>
+
+            <small>
+              Administrar datos de agentes
+            </small>
+          </button>
+
+
+          <button
+            class="menu-card"
+            type="button"
+            data-target="screen-crimes"
+          >
+            <span class="menu-icon">
+              ⚖️
+            </span>
+
+            <strong>
+              DELITOS Y LEYES
+            </strong>
+
+            <small>
+              Consultar catálogo jurídico
+            </small>
+          </button>
+
+
+          <button
+            class="menu-card"
+            type="button"
+            data-target="screen-templates"
+          >
+            <span class="menu-icon">
+              📄
+            </span>
+
+            <strong>
+              PLANTILLAS
+            </strong>
+
+            <small>
+              Formatos de documentos
+            </small>
+          </button>
+
+        </div>
+
+
+        <!-- ACTAS RECIENTES -->
+        <section class="panel">
+
+          <div class="panel-title-row">
+
+            <h2>
+              Actas recientes
+            </h2>
+
+            <button
+              class="text-button"
+              id="viewAllButton"
+              type="button"
+            >
+              Ver todas
+            </button>
+
+          </div>
+
+          <div
+            id="recentActs"
+            class="empty-state"
+          >
+            Todavía no hay actas guardadas.
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- =====================================
+           PANTALLA: DATOS DEL HECHO
+      ====================================== -->
+      <section
+        id="screen-fact"
+        class="screen"
+      >
+
+        <div class="screen-header">
+
+          <button
+            class="back-button"
+            type="button"
+            data-target="screen-home"
+          >
+            ←
+          </button>
+
+          <h2>
+            Datos del hecho
+          </h2>
+
+        </div>
+
+
+        <form
+          id="factForm"
+          class="form-card"
+        >
+
+          <label>
+            Fecha del hecho
+
+            <input
+              type="date"
+              id="factDate"
+              required
+            >
+          </label>
+
+
+          <label>
+            Hora del hecho
+
+            <input
+              type="time"
+              id="factTime"
+              required
+            >
+          </label>
+
+
+          <label>
+            Lugar del hecho
+
+            <textarea
+              id="factPlace"
+              rows="3"
+              placeholder="Dirección, cantón, caserío, distrito, municipio y departamento"
+            ></textarea>
+          </label>
+
+
+          <label>
+            Dependencia / puesto policial
+
+            <input
+              type="text"
+              id="station"
+              placeholder="Ingrese la dependencia correspondiente"
+            >
+          </label>
+
+
+          <label>
+            Tipo de procedimiento
+
+            <select id="procedureType">
+
+              <option value="">
+                Seleccione
+              </option>
+
+              <option>
+                Aprehensión en flagrancia
+              </option>
+
+              <option>
+                Detención por orden
+              </option>
+
+              <option>
+                Procedimiento preventivo
+              </option>
+
+              <option>
+                Otro
+              </option>
+
+            </select>
+          </label>
+
+
+          <label>
+            Referencia interna
+
+            <input
+              type="text"
+              id="internalReference"
+              placeholder="Opcional"
+            >
+          </label>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            id="goAgentsButton"
+          >
+            SIGUIENTE →
+          </button>
+
+        </form>
+
+      </section>
+
+
+      <!-- =====================================
+           PANTALLA: AGENTES
+      ====================================== -->
+      <section
+        id="screen-agents"
+        class="screen"
+      >
+
+        <div class="screen-header">
+
+          <button
+            class="back-button"
+            type="button"
+            data-target="screen-home"
+          >
+            ←
+          </button>
+
+          <h2>
+            Agentes
+          </h2>
+
+        </div>
+
+
+        <div class="form-card">
+
+          <p class="helper">
+            Agregue los agentes que participaron
+            en el procedimiento.
+          </p>
+
+
+          <label>
+            Nombre completo
+
+            <input
+              type="text"
+              id="agentName"
+              placeholder="Nombre del agente"
+            >
+          </label>
+
+
+          <label>
+            Cargo / grado
+
+            <input
+              type="text"
+              id="agentRank"
+              placeholder="Cargo o grado"
+            >
+          </label>
+
+
+          <label>
+            ONI / placa / número institucional
+
+            <input
+              type="text"
+              id="agentId"
+              placeholder="Número institucional"
+            >
+          </label>
+
+
+          <button
+            type="button"
+            class="secondary-button"
+            id="addAgentButton"
+          >
+            ＋ AGREGAR AGENTE
+          </button>
+
+
+          <div
+            id="agentsList"
+            class="cards-list"
+          ></div>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            id="goPersonButton"
+          >
+            SIGUIENTE →
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================
+           PANTALLA: PERSONA APREHENDIDA
+      ====================================== -->
+      <section
+        id="screen-persons"
+        class="screen"
+      >
+
+        <div class="screen-header">
+
+          <button
+            class="back-button"
+            type="button"
+            data-target="screen-home"
+          >
+            ←
+          </button>
+
+          <h2>
+            Persona aprehendida
+          </h2>
+
+        </div>
+
+
+        <div class="form-card">
+
+          <label>
+            Buscar por DUI
+
+            <div class="input-row">
+
+              <input
+                type="text"
+                id="duiSearch"
+                placeholder="00000000-0"
+                inputmode="numeric"
+              >
+
+              <button
+                type="button"
+                class="search-button"
+                id="searchDuiButton"
+              >
+                Buscar
+              </button>
+
+            </div>
+          </label>
+
+
+          <div
+            id="duiStatus"
+            class="status-box hidden"
+          ></div>
+
+
+          <label>
+            Nombres
+
+            <input
+              type="text"
+              id="personFirstName"
+            >
+          </label>
+
+
+          <label>
+            Apellidos
+
+            <input
+              type="text"
+              id="personLastName"
+            >
+          </label>
+
+
+          <label>
+            Fecha de nacimiento
+
+            <input
+              type="date"
+              id="personBirthDate"
+            >
+          </label>
+
+
+          <label>
+            Estado civil
+
+            <input
+              type="text"
+              id="personCivilStatus"
+            >
+          </label>
+
+
+          <label>
+            Profesión u oficio
+
+            <input
+              type="text"
+              id="personOccupation"
+            >
+          </label>
+
+
+          <label>
+            Domicilio
+
+            <textarea
+              id="personAddress"
+              rows="3"
+            ></textarea>
+          </label>
+
+
+          <button
+            type="button"
+            class="secondary-button"
+            id="savePersonButton"
+          >
+            GUARDAR PERSONA
+          </button>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            id="goVictimButton"
+          >
+            SIGUIENTE →
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================
+           PANTALLA: VÍCTIMA
+      ====================================== -->
+      <section
+        id="screen-victim"
+        class="screen"
+      >
+
+        <div class="screen-header">
+
+          <button
+            class="back-button"
+            type="button"
+            data-target="screen-persons"
+          >
+            ←
+          </button>
+
+          <h2>
+            Datos de la víctima
+          </h2>
+
+        </div>
+
+
+        <div class="form-card">
+
+          <label>
+            DUI
+
+            <input
+              type="text"
+              id="victimDui"
+              placeholder="Opcional"
+              inputmode="numeric"
+            >
+          </label>
+
+
+          <label>
+            Nombres
+
+            <input
+              type="text"
+              id="victimFirstName"
+            >
+          </label>
+
+
+          <label>
+            Apellidos
+
+            <input
+              type="text"
+              id="victimLastName"
+            >
+          </label>
+
+
+          <label>
+            Domicilio
+
+            <textarea
+              id="victimAddress"
+              rows="3"
+            ></textarea>
+          </label>
+
+
+          <label>
+            Relación con el hecho
+
+            <select id="victimRelation">
+
+              <option value="">
+                Seleccione
+              </option>
+
+              <option>
+                Víctima directa
+              </option>
+
+              <option>
+                Denunciante
+              </option>
+
+              <option>
+                Testigo
+              </option>
+
+              <option>
+                Otra
+              </option>
+
+            </select>
+          </label>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            id="goCrimeButton"
+          >
+            SIGUIENTE →
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================
+           PANTALLA: DELITO Y ARTÍCULO
+      ====================================== -->
+      <section
+        id="screen-crimes"
+        class="screen"
+      >
+
+        <div class="screen-header">
+
+          <button
+            class="back-button"
+            type="button"
+            data-target="screen-home"
+          >
+            ←
+          </button>
+
+          <h2>
+            Delito y artículo
+          </h2>
+
+        </div>
+
+
+        <div class="form-card">
+
+          <p class="helper">
+            Busque el delito por nombre,
+            artículo o ley.
+          </p>
+
+
+          <label>
+            Buscar delito
+
+            <div class="input-row">
+
+              <input
+                type="text"
+                id="crimeSearch"
+                placeholder="Ejemplo: lesiones"
+              >
+
+              <button
+                type="button"
+                class="search-button"
+                id="searchCrimeButton"
+              >
+                Buscar
+              </button>
+
+            </div>
+          </label>
+
+
+          <div
+            id="crimeResults"
+            class="cards-list"
+          ></div>
+
+
+          <div
+            id="selectedCrime"
+            class="selected-box hidden"
+          ></div>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            id="goNarrativeButton"
+          >
+            SIGUIENTE →
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================
+           PANTALLA: RELATO
+      ====================================== -->
+      <section
+        id="screen-narrative"
+        class="screen"
+      >
+
+        <div class="screen-header">
+
+          <button
+            class="back-button"
+            type="button"
+            data-target="screen-crimes"
+          >
+            ←
+          </button>
+
+          <h2>
+            Relato de los hechos
+          </h2>
+
+        </div>
+
+
+        <div class="form-card">
+
+          <p class="helper">
+            Describa los hechos de forma clara
+            y cronológica.
+          </p>
+
+
+          <label>
+            Relato de los hechos
+
+            <textarea
+              id="narrative"
+              rows="14"
+              placeholder="Ingrese aquí el relato de los hechos..."
+            ></textarea>
+          </label>
+
+
+          <label>
+            Objetos / evidencias
+
+            <textarea
+              id="evidence"
+              rows="4"
+              placeholder="Ingrese objetos, evidencias o información adicional"
+            ></textarea>
+          </label>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            id="goPreviewButton"
+          >
+            VISTA PREVIA →
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================
+           PANTALLA: VISTA PREVIA
+      ====================================== -->
+      <section
+        id="screen-preview"
+        class="screen"
+      >
+
+        <div class="screen-header">
+
+          <button
+            class="back-button"
+            type="button"
+            data-target="screen-narrative"
+          >
+            ←
+          </button>
+
+          <h2>
+            Vista previa
+          </h2>
+
+        </div>
+
+
+        <div
+          class="document-preview"
+          id="documentPreview"
+        >
+
+          <h3>
+            ACTA POLICIAL
+          </h3>
+
+          <p>
+            Complete los datos para generar
+            la vista previa del documento.
+          </p>
+
+        </div>
+
+
+        <div class="action-stack">
+
+          <button
+            type="button"
+            class="primary-button"
+            id="saveDraftButton"
+          >
+            GUARDAR BORRADOR
+          </button>
+
+
+          <button
+            type="button"
+            class="secondary-button"
+            id="printButton"
+          >
+            IMPRIMIR / GUARDAR PDF
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================
+           PANTALLA: PLANTILLAS
+      ====================================== -->
+      <section
+        id="screen-templates"
+        class="screen"
+      >
+
+        <div class="screen-header">
+
+          <button
+            class="back-button"
+            type="button"
+            data-target="screen-home"
+          >
+            ←
+          </button>
+
+          <h2>
+            Plantillas
+          </h2>
+
+        </div>
+
+
+        <div class="form-card">
+
+          <p class="helper">
+            Aquí incorporaremos los diferentes
+            formatos de documentos de SIGA SV.
+          </p>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <!-- =========================================
+         NAVEGACIÓN INFERIOR
+    ========================================== -->
+    <nav class="bottom-nav">
+
+      <button
+        type="button"
+        data-target="screen-home"
+      >
+        ⌂
+        <span>Inicio</span>
+      </button>
+
+
+      <button
+        type="button"
+        data-target="screen-fact"
+      >
+        ▣
+        <span>Acta</span>
+      </button>
+
+
+      <button
+        type="button"
+        data-target="screen-persons"
+      >
+        ♙
+        <span>Personas</span>
+      </button>
+
+
+      <button
+        type="button"
+        data-target="screen-crimes"
+      >
+        ⚖
+        <span>Delitos</span>
+      </button>
+
+    </nav>
+
+  </div>
+
+
+  <!-- =========================================
+       LÓGICA DE SIGA SV
+  ========================================== -->
+  <script src="app.js"></script>
+
+</body>
+</html>
