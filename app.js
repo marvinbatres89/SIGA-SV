@@ -2,7 +2,13 @@
    SIGA SV
    Sistema Inteligente de Gestión de Actas
    ARCHIVO: app.js
-   VERSIÓN BASE 1
+   VERSIÓN BASE 1.1
+   VALIDACIÓN OBLIGATORIA POR FASES
+========================================================= */
+
+
+/* =========================================================
+   ESTADO GENERAL
 ========================================================= */
 
 const state = {
@@ -21,8 +27,13 @@ const state = {
 ========================================================= */
 
 function getPeopleDatabase() {
+
   try {
-    const saved = localStorage.getItem("siga_sv_people");
+
+    const saved =
+      localStorage.getItem(
+        "siga_sv_people"
+      );
 
     if (!saved) {
       return {};
@@ -31,22 +42,37 @@ function getPeopleDatabase() {
     return JSON.parse(saved);
 
   } catch (error) {
-    console.error("Error leyendo personas:", error);
+
+    console.error(
+      "Error leyendo personas:",
+      error
+    );
+
     return {};
+
   }
+
 }
 
 
 function savePeopleDatabase(database) {
+
   try {
+
     localStorage.setItem(
       "siga_sv_people",
       JSON.stringify(database)
     );
 
   } catch (error) {
-    console.error("Error guardando personas:", error);
+
+    console.error(
+      "Error guardando personas:",
+      error
+    );
+
   }
+
 }
 
 
@@ -54,14 +80,13 @@ function savePeopleDatabase(database) {
    CATÁLOGO JURÍDICO DEMOSTRATIVO
 
    IMPORTANTE:
-   Estos registros son únicamente para probar
-   el funcionamiento de esta Base 1.
-
-   Posteriormente se sustituirán por normativa
-   oficial vigente y verificada.
+   El catálogo definitivo se incorporará
+   posteriormente con normativa oficial
+   vigente y verificada.
 ========================================================= */
 
 const crimeCatalog = [
+
   {
     name: "Lesiones",
     article: "142",
@@ -77,6 +102,7 @@ const crimeCatalog = [
     description:
       "Registro demostrativo para probar el buscador jurídico."
   }
+
 ];
 
 
@@ -91,10 +117,17 @@ document.addEventListener(
 
 
 function initializeApp() {
+
   configureNavigation();
+
   configureButtons();
+
+  configureLiveValidation();
+
   setDefaultDate();
+
   loadDraft();
+
 }
 
 
@@ -103,36 +136,64 @@ function initializeApp() {
 ========================================================= */
 
 function configureNavigation() {
+
   const navigationButtons =
-    document.querySelectorAll("[data-target]");
+    document.querySelectorAll(
+      "[data-target]"
+    );
 
-  navigationButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      const target = button.dataset.target;
 
-      if (target) {
-        showScreen(target);
-      }
-    });
-  });
+  navigationButtons.forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const target =
+            button.dataset.target;
+
+
+          if (target) {
+
+            showScreen(target);
+
+          }
+
+        }
+      );
+
+    }
+  );
+
 }
 
 
 function showScreen(id) {
-  const screens =
-    document.querySelectorAll(".screen");
 
-  screens.forEach(screen => {
-    screen.classList.toggle(
-      "active",
-      screen.id === id
+  const screens =
+    document.querySelectorAll(
+      ".screen"
     );
-  });
+
+
+  screens.forEach(
+    screen => {
+
+      screen.classList.toggle(
+        "active",
+        screen.id === id
+      );
+
+    }
+  );
+
 
   window.scrollTo({
     top: 0,
     behavior: "smooth"
   });
+
 }
 
 
@@ -141,160 +202,292 @@ function showScreen(id) {
 ========================================================= */
 
 function configureButtons() {
+
   const newActButton =
-    document.getElementById("newActButton");
+    document.getElementById(
+      "newActButton"
+    );
 
   const goAgentsButton =
-    document.getElementById("goAgentsButton");
+    document.getElementById(
+      "goAgentsButton"
+    );
 
   const addAgentButton =
-    document.getElementById("addAgentButton");
+    document.getElementById(
+      "addAgentButton"
+    );
 
   const goPersonButton =
-    document.getElementById("goPersonButton");
+    document.getElementById(
+      "goPersonButton"
+    );
 
   const searchDuiButton =
-    document.getElementById("searchDuiButton");
+    document.getElementById(
+      "searchDuiButton"
+    );
 
   const savePersonButton =
-    document.getElementById("savePersonButton");
+    document.getElementById(
+      "savePersonButton"
+    );
 
   const goVictimButton =
-    document.getElementById("goVictimButton");
+    document.getElementById(
+      "goVictimButton"
+    );
 
   const goCrimeButton =
-    document.getElementById("goCrimeButton");
+    document.getElementById(
+      "goCrimeButton"
+    );
 
   const searchCrimeButton =
-    document.getElementById("searchCrimeButton");
+    document.getElementById(
+      "searchCrimeButton"
+    );
 
   const goNarrativeButton =
-    document.getElementById("goNarrativeButton");
+    document.getElementById(
+      "goNarrativeButton"
+    );
 
   const goPreviewButton =
-    document.getElementById("goPreviewButton");
+    document.getElementById(
+      "goPreviewButton"
+    );
 
   const saveDraftButton =
-    document.getElementById("saveDraftButton");
+    document.getElementById(
+      "saveDraftButton"
+    );
 
   const printButton =
-    document.getElementById("printButton");
+    document.getElementById(
+      "printButton"
+    );
 
 
   if (newActButton) {
+
     newActButton.addEventListener(
       "click",
       startNewAct
     );
+
   }
 
 
   if (goAgentsButton) {
+
     goAgentsButton.addEventListener(
       "click",
-      saveFactAndContinue
+      validateFactPhase
     );
+
   }
 
 
   if (addAgentButton) {
+
     addAgentButton.addEventListener(
       "click",
       addAgent
     );
+
   }
 
 
   if (goPersonButton) {
+
     goPersonButton.addEventListener(
       "click",
-      () => {
-        showScreen("screen-persons");
-      }
+      validateAgentsPhase
     );
+
   }
 
 
   if (searchDuiButton) {
+
     searchDuiButton.addEventListener(
       "click",
       searchPersonByDui
     );
+
   }
 
 
   if (savePersonButton) {
+
     savePersonButton.addEventListener(
       "click",
       savePerson
     );
+
   }
 
 
   if (goVictimButton) {
+
     goVictimButton.addEventListener(
       "click",
-      () => {
-        capturePerson();
-        showScreen("screen-victim");
-      }
+      validatePersonPhase
     );
+
   }
 
 
   if (goCrimeButton) {
+
     goCrimeButton.addEventListener(
       "click",
-      saveVictimAndContinue
+      validateVictimPhase
     );
+
   }
 
 
   if (searchCrimeButton) {
+
     searchCrimeButton.addEventListener(
       "click",
       searchCrimes
     );
+
   }
 
 
   if (goNarrativeButton) {
+
     goNarrativeButton.addEventListener(
       "click",
-      () => {
-        showScreen("screen-narrative");
-      }
+      validateCrimePhase
     );
+
   }
 
 
   if (goPreviewButton) {
+
     goPreviewButton.addEventListener(
       "click",
-      preparePreview
+      validateNarrativePhase
     );
+
   }
 
 
   if (saveDraftButton) {
+
     saveDraftButton.addEventListener(
       "click",
       saveDraft
     );
+
   }
 
 
   if (printButton) {
+
     printButton.addEventListener(
       "click",
       () => {
+
         window.print();
+
       }
     );
+
   }
 
 
   configureEnterSearches();
+
+}
+
+
+/* =========================================================
+   VALIDACIÓN EN TIEMPO REAL
+
+   Cuando el usuario comienza a completar
+   un campo marcado en rojo, el aviso
+   desaparece automáticamente.
+========================================================= */
+
+function configureLiveValidation() {
+
+  const fieldIds = [
+
+    "factDate",
+    "factTime",
+    "factPlace",
+    "station",
+    "procedureType",
+
+    "agentName",
+    "agentRank",
+    "agentId",
+
+    "duiSearch",
+    "personFirstName",
+    "personLastName",
+    "personBirthDate",
+    "personCivilStatus",
+    "personOccupation",
+    "personAddress",
+
+    "victimFirstName",
+    "victimLastName",
+    "victimAddress",
+    "victimRelation",
+
+    "narrative"
+
+  ];
+
+
+  fieldIds.forEach(
+    id => {
+
+      const element =
+        document.getElementById(id);
+
+
+      if (!element) {
+        return;
+      }
+
+
+      const eventName =
+        element.tagName === "SELECT"
+          ?
+          "change"
+          :
+          "input";
+
+
+      element.addEventListener(
+        eventName,
+        () => {
+
+          if (
+            String(
+              element.value || ""
+            ).trim()
+          ) {
+
+            clearFieldError(id);
+
+          }
+
+        }
+      );
+
+    }
+  );
+
 }
 
 
@@ -303,37 +496,57 @@ function configureButtons() {
 ========================================================= */
 
 function configureEnterSearches() {
+
   const duiInput =
-    document.getElementById("duiSearch");
+    document.getElementById(
+      "duiSearch"
+    );
 
   const crimeInput =
-    document.getElementById("crimeSearch");
+    document.getElementById(
+      "crimeSearch"
+    );
 
 
   if (duiInput) {
+
     duiInput.addEventListener(
       "keydown",
       event => {
+
         if (event.key === "Enter") {
+
           event.preventDefault();
+
           searchPersonByDui();
+
         }
+
       }
     );
+
   }
 
 
   if (crimeInput) {
+
     crimeInput.addEventListener(
       "keydown",
       event => {
+
         if (event.key === "Enter") {
+
           event.preventDefault();
+
           searchCrimes();
+
         }
+
       }
     );
+
   }
+
 }
 
 
@@ -342,7 +555,11 @@ function configureEnterSearches() {
 ========================================================= */
 
 function startNewAct() {
-  showScreen("screen-fact");
+
+  showScreen(
+    "screen-fact"
+  );
+
 }
 
 
@@ -351,113 +568,505 @@ function startNewAct() {
 ========================================================= */
 
 function setDefaultDate() {
-  const dateInput =
-    document.getElementById("factDate");
 
-  if (dateInput && !dateInput.value) {
-    const now = new Date();
+  const dateInput =
+    document.getElementById(
+      "factDate"
+    );
+
+
+  if (
+    dateInput &&
+    !dateInput.value
+  ) {
+
+    const now =
+      new Date();
+
 
     const year =
       now.getFullYear();
 
+
     const month =
       String(
         now.getMonth() + 1
-      ).padStart(2, "0");
+      ).padStart(
+        2,
+        "0"
+      );
+
 
     const day =
       String(
         now.getDate()
-      ).padStart(2, "0");
+      ).padStart(
+        2,
+        "0"
+      );
+
 
     dateInput.value =
       `${year}-${month}-${day}`;
+
   }
+
 }
 
 
 /* =========================================================
-   DATOS DEL HECHO
+   UTILIDAD GENERAL DE VALIDACIÓN
 ========================================================= */
 
-function saveFactAndContinue() {
-  const date =
-    getValue("factDate");
+function validateRequiredField(
+  id,
+  message
+) {
 
-  const time =
-    getValue("factTime");
-
-  const place =
-    getValue("factPlace");
-
-  const station =
-    getValue("station");
-
-  const procedureType =
-    getValue("procedureType");
-
-  const internalReference =
-    getValue("internalReference");
+  const value =
+    getValue(id);
 
 
-  if (!date) {
-    alert(
+  if (!value) {
+
+    showFieldError(
+      id,
+      message
+    );
+
+    return false;
+
+  }
+
+
+  clearFieldError(id);
+
+  return true;
+
+}
+
+
+/* =========================================================
+   MOSTRAR ERROR DE CAMPO
+========================================================= */
+
+function showFieldError(
+  id,
+  message
+) {
+
+  const field =
+    document.getElementById(id);
+
+
+  const error =
+    document.getElementById(
+      `error-${id}`
+    );
+
+
+  if (field) {
+
+    field.classList.add(
+      "input-error"
+    );
+
+  }
+
+
+  if (error) {
+
+    error.textContent =
+      message;
+
+    error.classList.add(
+      "visible"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   QUITAR ERROR DE CAMPO
+========================================================= */
+
+function clearFieldError(id) {
+
+  const field =
+    document.getElementById(id);
+
+
+  const error =
+    document.getElementById(
+      `error-${id}`
+    );
+
+
+  if (field) {
+
+    field.classList.remove(
+      "input-error"
+    );
+
+  }
+
+
+  if (error) {
+
+    error.textContent = "";
+
+    error.classList.remove(
+      "visible"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   MOSTRAR ERROR GENERAL DE FASE
+========================================================= */
+
+function showPhaseError(id) {
+
+  const element =
+    document.getElementById(id);
+
+
+  if (element) {
+
+    element.classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   OCULTAR ERROR GENERAL DE FASE
+========================================================= */
+
+function hidePhaseError(id) {
+
+  const element =
+    document.getElementById(id);
+
+
+  if (element) {
+
+    element.classList.add(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LLEVAR AL PRIMER CAMPO INCORRECTO
+========================================================= */
+
+function focusFirstError() {
+
+  const firstError =
+    document.querySelector(
+      ".input-error"
+    );
+
+
+  if (!firstError) {
+    return;
+  }
+
+
+  firstError.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+
+  setTimeout(
+    () => {
+
+      try {
+
+        firstError.focus();
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    },
+    350
+  );
+
+}
+
+
+/* =========================================================
+   FASE 1
+   VALIDAR DATOS DEL HECHO
+========================================================= */
+
+function validateFactPhase() {
+
+  hidePhaseError(
+    "factPhaseError"
+  );
+
+
+  const validDate =
+    validateRequiredField(
+      "factDate",
       "Ingrese la fecha del hecho."
     );
+
+
+  const validTime =
+    validateRequiredField(
+      "factTime",
+      "Ingrese la hora del hecho."
+    );
+
+
+  const validPlace =
+    validateRequiredField(
+      "factPlace",
+      "Ingrese el lugar del hecho."
+    );
+
+
+  const validStation =
+    validateRequiredField(
+      "station",
+      "Ingrese la dependencia o puesto policial."
+    );
+
+
+  const validProcedure =
+    validateRequiredField(
+      "procedureType",
+      "Seleccione el tipo de procedimiento."
+    );
+
+
+  const valid =
+    validDate &&
+    validTime &&
+    validPlace &&
+    validStation &&
+    validProcedure;
+
+
+  if (!valid) {
+
+    showPhaseError(
+      "factPhaseError"
+    );
+
+    focusFirstError();
+
     return;
+
   }
 
 
   state.fact = {
-    date,
-    time,
-    place,
-    station,
-    procedureType,
-    internalReference
+
+    date:
+      getValue(
+        "factDate"
+      ),
+
+    time:
+      getValue(
+        "factTime"
+      ),
+
+    place:
+      getValue(
+        "factPlace"
+      ),
+
+    station:
+      getValue(
+        "station"
+      ),
+
+    procedureType:
+      getValue(
+        "procedureType"
+      ),
+
+    internalReference:
+      getValue(
+        "internalReference"
+      )
+
   };
 
 
-  showScreen("screen-agents");
+  hidePhaseError(
+    "factPhaseError"
+  );
+
+
+  showScreen(
+    "screen-agents"
+  );
+
 }
 
 
 /* =========================================================
-   AGENTES
+   FASE 2
+   AGREGAR AGENTE
 ========================================================= */
 
 function addAgent() {
+
   const name =
-    getValue("agentName");
+    getValue(
+      "agentName"
+    );
+
 
   const rank =
-    getValue("agentRank");
+    getValue(
+      "agentRank"
+    );
+
 
   const id =
-    getValue("agentId");
-
-
-  if (!name) {
-    alert(
-      "Ingrese el nombre del agente."
+    getValue(
+      "agentId"
     );
+
+
+  const validName =
+    validateRequiredField(
+      "agentName",
+      "Ingrese el nombre completo del agente."
+    );
+
+
+  const validRank =
+    validateRequiredField(
+      "agentRank",
+      "Ingrese el cargo o grado."
+    );
+
+
+  const validId =
+    validateRequiredField(
+      "agentId",
+      "Ingrese el número institucional."
+    );
+
+
+  if (
+    !validName ||
+    !validRank ||
+    !validId
+  ) {
+
+    focusFirstError();
+
     return;
+
   }
 
 
   state.agents.push({
+
     name,
+
     rank,
+
     id
+
   });
 
 
   renderAgents();
 
 
-  setValue("agentName", "");
-  setValue("agentRank", "");
-  setValue("agentId", "");
+  setValue(
+    "agentName",
+    ""
+  );
+
+
+  setValue(
+    "agentRank",
+    ""
+  );
+
+
+  setValue(
+    "agentId",
+    ""
+  );
+
+
+  clearFieldError(
+    "agentName"
+  );
+
+
+  clearFieldError(
+    "agentRank"
+  );
+
+
+  clearFieldError(
+    "agentId"
+  );
+
+
+  hidePhaseError(
+    "agentsPhaseError"
+  );
+
+}
+
+
+/* =========================================================
+   VALIDAR FASE DE AGENTES
+========================================================= */
+
+function validateAgentsPhase() {
+
+  if (
+    state.agents.length === 0
+  ) {
+
+    showPhaseError(
+      "agentsPhaseError"
+    );
+
+    return;
+
+  }
+
+
+  hidePhaseError(
+    "agentsPhaseError"
+  );
+
+
+  showScreen(
+    "screen-persons"
+  );
+
 }
 
 
@@ -466,8 +1075,12 @@ function addAgent() {
 ========================================================= */
 
 function renderAgents() {
+
   const list =
-    document.getElementById("agentsList");
+    document.getElementById(
+      "agentsList"
+    );
+
 
   if (!list) {
     return;
@@ -477,14 +1090,19 @@ function renderAgents() {
   list.innerHTML = "";
 
 
-  if (state.agents.length === 0) {
-    list.innerHTML = `
-      <div class="empty-state">
-        No hay agentes agregados.
-      </div>
-    `;
+  if (
+    state.agents.length === 0
+  ) {
+
+    list.innerHTML =
+      `
+        <div class="empty-state">
+          No hay agentes agregados.
+        </div>
+      `;
 
     return;
+
   }
 
 
@@ -492,48 +1110,53 @@ function renderAgents() {
     (agent, index) => {
 
       const card =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       card.className =
         "data-card";
 
-      card.innerHTML = `
-        <strong>
-          ${escapeHtml(agent.name)}
-        </strong>
 
-        <small>
-          ${
-            escapeHtml(
-              agent.rank ||
-              "Sin cargo o grado"
-            )
-          }
+      card.innerHTML =
+        `
+          <strong>
+            ${escapeHtml(agent.name)}
+          </strong>
 
-          <br>
+          <small>
 
-          ${
-            escapeHtml(
-              agent.id ||
-              "Sin número institucional"
-            )
-          }
-        </small>
+            ${escapeHtml(agent.rank)}
 
-        <div style="margin-top:10px;">
+            <br>
 
-          <button
-            type="button"
-            class="text-button"
-            data-remove-agent="${index}"
+            ${escapeHtml(agent.id)}
+
+          </small>
+
+          <div
+            style="
+              margin-top:10px;
+            "
           >
-            Eliminar
-          </button>
 
-        </div>
-      `;
+            <button
+              type="button"
+              class="text-button"
+              data-remove-agent="${index}"
+            >
+              Eliminar
+            </button>
 
-      list.appendChild(card);
+          </div>
+        `;
+
+
+      list.appendChild(
+        card
+      );
+
     }
   );
 
@@ -544,58 +1167,82 @@ function renderAgents() {
     );
 
 
-  removeButtons.forEach(button => {
-    button.addEventListener(
-      "click",
-      () => {
+  removeButtons.forEach(
+    button => {
 
-        const index =
-          Number(
-            button.dataset.removeAgent
+      button.addEventListener(
+        "click",
+        () => {
+
+          const index =
+            Number(
+              button.dataset.removeAgent
+            );
+
+
+          state.agents.splice(
+            index,
+            1
           );
 
-        state.agents.splice(
-          index,
-          1
-        );
 
-        renderAgents();
-      }
-    );
-  });
+          renderAgents();
+
+        }
+      );
+
+    }
+  );
+
 }
 
 
 /* =========================================================
-   NORMALIZAR DUI
+   DUI
 ========================================================= */
 
 function normalizeDui(value) {
-  return String(value || "")
+
+  return String(
+    value || ""
+  )
     .trim()
-    .replace(/[^0-9]/g, "");
+    .replace(
+      /[^0-9]/g,
+      ""
+    );
+
 }
 
 
-/* =========================================================
-   FORMATO DE DUI
-========================================================= */
-
 function formatDui(value) {
+
   const digits =
     normalizeDui(value);
 
-  if (digits.length !== 9) {
+
+  if (
+    digits.length !== 9
+  ) {
+
     return value;
+
   }
 
+
   return (
-    digits.slice(0, 8)
+    digits.slice(
+      0,
+      8
+    )
     +
     "-"
     +
-    digits.slice(8)
+    digits.slice(
+      8
+    )
   );
+
 }
 
 
@@ -604,11 +1251,18 @@ function formatDui(value) {
 ========================================================= */
 
 function searchPersonByDui() {
+
   const duiInput =
-    getValue("duiSearch");
+    getValue(
+      "duiSearch"
+    );
+
 
   const dui =
-    normalizeDui(duiInput);
+    normalizeDui(
+      duiInput
+    );
+
 
   const status =
     document.getElementById(
@@ -617,50 +1271,34 @@ function searchPersonByDui() {
 
 
   if (!dui) {
-    alert(
-      "Ingrese un DUI para buscar."
-    );
-    return;
-  }
 
-
-  if (dui.length !== 9) {
-    alert(
-      "Revise el DUI ingresado."
-    );
-    return;
-  }
-
-
-  const database =
-    getPeopleDatabase();
-
-  const person =
-    database[dui];
-
-
-  if (status) {
-    status.classList.remove(
-      "hidden"
-    );
-  }
-
-
-  if (!person) {
-    clearPersonFields();
-
-    if (status) {
-      status.textContent =
-        "DUI no registrado. Puede ingresar los datos y guardarlos.";
-    }
-
-    setValue(
+    showFieldError(
       "duiSearch",
-      formatDui(dui)
+      "Ingrese el DUI."
     );
 
     return;
+
   }
+
+
+  if (
+    dui.length !== 9
+  ) {
+
+    showFieldError(
+      "duiSearch",
+      "El DUI debe contener 9 dígitos."
+    );
+
+    return;
+
+  }
+
+
+  clearFieldError(
+    "duiSearch"
+  );
 
 
   setValue(
@@ -668,30 +1306,71 @@ function searchPersonByDui() {
     formatDui(dui)
   );
 
+
+  const database =
+    getPeopleDatabase();
+
+
+  const person =
+    database[dui];
+
+
+  if (status) {
+
+    status.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  if (!person) {
+
+    clearPersonFields();
+
+
+    if (status) {
+
+      status.textContent =
+        "DUI no registrado. Complete los datos para registrar la persona.";
+
+    }
+
+
+    return;
+
+  }
+
+
   setValue(
     "personFirstName",
     person.firstName || ""
   );
+
 
   setValue(
     "personLastName",
     person.lastName || ""
   );
 
+
   setValue(
     "personBirthDate",
     person.birthDate || ""
   );
+
 
   setValue(
     "personCivilStatus",
     person.civilStatus || ""
   );
 
+
   setValue(
     "personOccupation",
     person.occupation || ""
   );
+
 
   setValue(
     "personAddress",
@@ -699,47 +1378,87 @@ function searchPersonByDui() {
   );
 
 
+  clearFieldError(
+    "personFirstName"
+  );
+
+
+  clearFieldError(
+    "personLastName"
+  );
+
+
+  clearFieldError(
+    "personBirthDate"
+  );
+
+
+  clearFieldError(
+    "personCivilStatus"
+  );
+
+
+  clearFieldError(
+    "personOccupation"
+  );
+
+
+  clearFieldError(
+    "personAddress"
+  );
+
+
   if (status) {
+
     status.textContent =
       "Persona encontrada. Datos cargados automáticamente.";
+
   }
+
 }
 
 
 /* =========================================================
-   LIMPIAR CAMPOS DE PERSONA
+   LIMPIAR PERSONA
 ========================================================= */
 
 function clearPersonFields() {
+
   setValue(
     "personFirstName",
     ""
   );
+
 
   setValue(
     "personLastName",
     ""
   );
 
+
   setValue(
     "personBirthDate",
     ""
   );
+
 
   setValue(
     "personCivilStatus",
     ""
   );
 
+
   setValue(
     "personOccupation",
     ""
   );
 
+
   setValue(
     "personAddress",
     ""
   );
+
 }
 
 
@@ -748,10 +1467,14 @@ function clearPersonFields() {
 ========================================================= */
 
 function capturePerson() {
+
   state.person = {
+
     dui:
       formatDui(
-        getValue("duiSearch")
+        getValue(
+          "duiSearch"
+        )
       ),
 
     firstName:
@@ -783,10 +1506,139 @@ function capturePerson() {
       getValue(
         "personAddress"
       )
+
   };
 
 
   return state.person;
+
+}
+
+
+/* =========================================================
+   VALIDAR PERSONA APREHENDIDA
+========================================================= */
+
+function validatePersonPhase() {
+
+  hidePhaseError(
+    "personPhaseError"
+  );
+
+
+  const dui =
+    normalizeDui(
+      getValue(
+        "duiSearch"
+      )
+    );
+
+
+  let validDui = true;
+
+
+  if (
+    dui.length !== 9
+  ) {
+
+    showFieldError(
+      "duiSearch",
+      "Ingrese un DUI válido de 9 dígitos."
+    );
+
+    validDui = false;
+
+  } else {
+
+    clearFieldError(
+      "duiSearch"
+    );
+
+    setValue(
+      "duiSearch",
+      formatDui(dui)
+    );
+
+  }
+
+
+  const validFirstName =
+    validateRequiredField(
+      "personFirstName",
+      "Ingrese los nombres."
+    );
+
+
+  const validLastName =
+    validateRequiredField(
+      "personLastName",
+      "Ingrese los apellidos."
+    );
+
+
+  const validBirthDate =
+    validateRequiredField(
+      "personBirthDate",
+      "Ingrese la fecha de nacimiento."
+    );
+
+
+  const validCivilStatus =
+    validateRequiredField(
+      "personCivilStatus",
+      "Ingrese el estado civil."
+    );
+
+
+  const validOccupation =
+    validateRequiredField(
+      "personOccupation",
+      "Ingrese la profesión u oficio."
+    );
+
+
+  const validAddress =
+    validateRequiredField(
+      "personAddress",
+      "Ingrese el domicilio."
+    );
+
+
+  const valid =
+    validDui &&
+    validFirstName &&
+    validLastName &&
+    validBirthDate &&
+    validCivilStatus &&
+    validOccupation &&
+    validAddress;
+
+
+  if (!valid) {
+
+    showPhaseError(
+      "personPhaseError"
+    );
+
+    focusFirstError();
+
+    return;
+
+  }
+
+
+  capturePerson();
+
+
+  hidePhaseError(
+    "personPhaseError"
+  );
+
+
+  showScreen(
+    "screen-victim"
+  );
+
 }
 
 
@@ -795,32 +1647,91 @@ function capturePerson() {
 ========================================================= */
 
 function savePerson() {
-  const person =
-    capturePerson();
 
   const dui =
     normalizeDui(
-      person.dui
+      getValue(
+        "duiSearch"
+      )
     );
-
-
-  if (dui.length !== 9) {
-    alert(
-      "Ingrese un DUI válido antes de guardar la persona."
-    );
-    return;
-  }
 
 
   if (
-    !person.firstName ||
-    !person.lastName
+    dui.length !== 9
   ) {
-    alert(
-      "Ingrese nombres y apellidos."
+
+    showFieldError(
+      "duiSearch",
+      "Ingrese un DUI válido de 9 dígitos."
     );
+
+    focusFirstError();
+
     return;
+
   }
+
+
+  const validFirstName =
+    validateRequiredField(
+      "personFirstName",
+      "Ingrese los nombres."
+    );
+
+
+  const validLastName =
+    validateRequiredField(
+      "personLastName",
+      "Ingrese los apellidos."
+    );
+
+
+  const validBirthDate =
+    validateRequiredField(
+      "personBirthDate",
+      "Ingrese la fecha de nacimiento."
+    );
+
+
+  const validCivilStatus =
+    validateRequiredField(
+      "personCivilStatus",
+      "Ingrese el estado civil."
+    );
+
+
+  const validOccupation =
+    validateRequiredField(
+      "personOccupation",
+      "Ingrese la profesión u oficio."
+    );
+
+
+  const validAddress =
+    validateRequiredField(
+      "personAddress",
+      "Ingrese el domicilio."
+    );
+
+
+  if (
+    !validFirstName ||
+    !validLastName ||
+    !validBirthDate ||
+    !validCivilStatus ||
+    !validOccupation ||
+    !validAddress
+  ) {
+
+    focusFirstError();
+
+    return;
+
+  }
+
+
+  const person =
+    capturePerson();
 
 
   const database =
@@ -828,6 +1739,7 @@ function savePerson() {
 
 
   database[dui] = {
+
     firstName:
       person.firstName,
 
@@ -845,10 +1757,13 @@ function savePerson() {
 
     address:
       person.address
+
   };
 
 
-  savePeopleDatabase(database);
+  savePeopleDatabase(
+    database
+  );
 
 
   const status =
@@ -858,30 +1773,127 @@ function savePerson() {
 
 
   if (status) {
+
     status.classList.remove(
       "hidden"
     );
 
+
     status.textContent =
       "Persona guardada correctamente en este dispositivo.";
+
   }
 
 
   alert(
     "Persona guardada correctamente."
   );
+
 }
 
 
 /* =========================================================
-   VÍCTIMA
+   FASE 4
+   VALIDAR VÍCTIMA
 ========================================================= */
 
-function saveVictimAndContinue() {
+function validateVictimPhase() {
+
+  hidePhaseError(
+    "victimPhaseError"
+  );
+
+
+  const validFirstName =
+    validateRequiredField(
+      "victimFirstName",
+      "Ingrese los nombres de la víctima."
+    );
+
+
+  const validLastName =
+    validateRequiredField(
+      "victimLastName",
+      "Ingrese los apellidos de la víctima."
+    );
+
+
+  const validAddress =
+    validateRequiredField(
+      "victimAddress",
+      "Ingrese el domicilio de la víctima."
+    );
+
+
+  const validRelation =
+    validateRequiredField(
+      "victimRelation",
+      "Seleccione la relación con el hecho."
+    );
+
+
+  const valid =
+    validFirstName &&
+    validLastName &&
+    validAddress &&
+    validRelation;
+
+
+  if (!valid) {
+
+    showPhaseError(
+      "victimPhaseError"
+    );
+
+    focusFirstError();
+
+    return;
+
+  }
+
+
+  const victimDui =
+    getValue(
+      "victimDui"
+    );
+
+
+  if (victimDui) {
+
+    const normalized =
+      normalizeDui(
+        victimDui
+      );
+
+
+    if (
+      normalized.length !== 9
+    ) {
+
+      alert(
+        "Revise el DUI de la víctima o déjelo vacío si no está disponible."
+      );
+
+      return;
+
+    }
+
+
+    setValue(
+      "victimDui",
+      formatDui(normalized)
+    );
+
+  }
+
+
   state.victim = {
+
     dui:
       formatDui(
-        getValue("victimDui")
+        getValue(
+          "victimDui"
+        )
       ),
 
     firstName:
@@ -903,10 +1915,19 @@ function saveVictimAndContinue() {
       getValue(
         "victimRelation"
       )
+
   };
 
 
-  showScreen("screen-crimes");
+  hidePhaseError(
+    "victimPhaseError"
+  );
+
+
+  showScreen(
+    "screen-crimes"
+  );
+
 }
 
 
@@ -915,9 +1936,13 @@ function saveVictimAndContinue() {
 ========================================================= */
 
 function searchCrimes() {
+
   const term =
-    getValue("crimeSearch")
+    getValue(
+      "crimeSearch"
+    )
       .toLowerCase();
+
 
   const resultsBox =
     document.getElementById(
@@ -934,103 +1959,138 @@ function searchCrimes() {
 
 
   if (!term) {
+
     alert(
       "Escriba el nombre, artículo o ley que desea buscar."
     );
+
     return;
+
   }
 
 
   const results =
-    crimeCatalog.filter(item => {
-      return (
-        item.name
-          .toLowerCase()
-          .includes(term)
+    crimeCatalog.filter(
+      item => {
 
-        ||
+        return (
 
-        item.article
-          .toLowerCase()
-          .includes(term)
+          item.name
+            .toLowerCase()
+            .includes(term)
 
-        ||
+          ||
 
-        item.law
-          .toLowerCase()
-          .includes(term)
-      );
-    });
+          item.article
+            .toLowerCase()
+            .includes(term)
 
+          ||
 
-  if (results.length === 0) {
-    resultsBox.innerHTML = `
-      <div class="empty-state">
-        No se encontraron coincidencias
-        en el catálogo actual.
-      </div>
-    `;
+          item.law
+            .toLowerCase()
+            .includes(term)
 
-    return;
-  }
+        );
 
-
-  results.forEach(crime => {
-    const card =
-      document.createElement(
-        "button"
-      );
-
-    card.type =
-      "button";
-
-    card.className =
-      "data-card";
-
-    card.style.textAlign =
-      "left";
-
-    card.innerHTML = `
-      <strong>
-        ${escapeHtml(crime.name)}
-      </strong>
-
-      <small>
-        Artículo
-        ${escapeHtml(crime.article)}
-
-        <br>
-
-        ${escapeHtml(crime.law)}
-      </small>
-
-      <div
-        style="
-          margin-top:7px;
-          font-size:12px;
-          color:#687386;
-          line-height:1.4;
-        "
-      >
-        ${escapeHtml(
-          crime.description
-        )}
-      </div>
-    `;
-
-
-    card.addEventListener(
-      "click",
-      () => {
-        selectCrime(crime);
       }
     );
 
 
-    resultsBox.appendChild(
-      card
-    );
-  });
+  if (
+    results.length === 0
+  ) {
+
+    resultsBox.innerHTML =
+      `
+        <div class="empty-state">
+
+          No se encontraron
+          coincidencias en el
+          catálogo actual.
+
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  results.forEach(
+    crime => {
+
+      const card =
+        document.createElement(
+          "button"
+        );
+
+
+      card.type =
+        "button";
+
+
+      card.className =
+        "data-card";
+
+
+      card.style.textAlign =
+        "left";
+
+
+      card.innerHTML =
+        `
+          <strong>
+            ${escapeHtml(crime.name)}
+          </strong>
+
+          <small>
+
+            Artículo
+            ${escapeHtml(crime.article)}
+
+            <br>
+
+            ${escapeHtml(crime.law)}
+
+          </small>
+
+          <div
+            style="
+              margin-top:7px;
+              font-size:12px;
+              color:#687386;
+              line-height:1.4;
+            "
+          >
+
+            ${escapeHtml(
+              crime.description
+            )}
+
+          </div>
+        `;
+
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          selectCrime(
+            crime
+          );
+
+        }
+      );
+
+
+      resultsBox.appendChild(
+        card
+      );
+
+    }
+  );
+
 }
 
 
@@ -1039,8 +2099,15 @@ function searchCrimes() {
 ========================================================= */
 
 function selectCrime(crime) {
+
   state.selectedCrime =
     crime;
+
+
+  hidePhaseError(
+    "crimePhaseError"
+  );
+
 
   const box =
     document.getElementById(
@@ -1058,45 +2125,117 @@ function selectCrime(crime) {
   );
 
 
-  box.innerHTML = `
-    <strong>
-      Delito seleccionado
-    </strong>
+  box.innerHTML =
+    `
+      <strong>
+        Delito seleccionado
+      </strong>
 
-    <br><br>
+      <br><br>
 
-    ${escapeHtml(crime.name)}
+      ${escapeHtml(crime.name)}
 
-    <br>
+      <br>
 
-    Artículo
-    ${escapeHtml(crime.article)}
+      Artículo
+      ${escapeHtml(crime.article)}
 
-    <br>
+      <br>
 
-    ${escapeHtml(crime.law)}
-  `;
+      ${escapeHtml(crime.law)}
+    `;
+
 }
 
 
 /* =========================================================
-   PREPARAR VISTA PREVIA
+   FASE 5
+   VALIDAR DELITO
 ========================================================= */
 
-function preparePreview() {
-  capturePerson();
+function validateCrimePhase() {
+
+  if (
+    !state.selectedCrime
+  ) {
+
+    showPhaseError(
+      "crimePhaseError"
+    );
+
+    return;
+
+  }
+
+
+  hidePhaseError(
+    "crimePhaseError"
+  );
+
+
+  showScreen(
+    "screen-narrative"
+  );
+
+}
+
+
+/* =========================================================
+   FASE 6
+   VALIDAR RELATO
+========================================================= */
+
+function validateNarrativePhase() {
+
+  hidePhaseError(
+    "narrativePhaseError"
+  );
+
+
+  const validNarrative =
+    validateRequiredField(
+      "narrative",
+      "Ingrese el relato de los hechos."
+    );
+
+
+  if (!validNarrative) {
+
+    showPhaseError(
+      "narrativePhaseError"
+    );
+
+    focusFirstError();
+
+    return;
+
+  }
+
 
   state.narrative =
-    getValue("narrative");
+    getValue(
+      "narrative"
+    );
+
 
   state.evidence =
-    getValue("evidence");
+    getValue(
+      "evidence"
+    );
+
+
+  hidePhaseError(
+    "narrativePhaseError"
+  );
+
 
   renderPreview();
+
 
   showScreen(
     "screen-preview"
   );
+
 }
 
 
@@ -1105,6 +2244,7 @@ function preparePreview() {
 ========================================================= */
 
 function renderPreview() {
+
   const preview =
     document.getElementById(
       "documentPreview"
@@ -1120,32 +2260,29 @@ function renderPreview() {
     state.agents.length
       ?
       state.agents
-        .map(agent => {
-          let text =
-            escapeHtml(
-              agent.name
-            );
+        .map(
+          agent => {
 
-          if (agent.rank) {
-            text +=
+            return (
+              escapeHtml(
+                agent.name
+              )
+              +
               ", "
               +
               escapeHtml(
                 agent.rank
-              );
-          }
-
-          if (agent.id) {
-            text +=
+              )
+              +
               ", "
               +
               escapeHtml(
                 agent.id
-              );
-          }
+              )
+            );
 
-          return text;
-        })
+          }
+        )
         .join("; ")
 
       :
@@ -1175,175 +2312,203 @@ function renderPreview() {
     "No seleccionado";
 
 
-  if (state.selectedCrime) {
-    crimeText = `
-      ${escapeHtml(
-        state.selectedCrime.name
-      )},
-      artículo
-      ${escapeHtml(
-        state.selectedCrime.article
-      )}
-      de
-      ${escapeHtml(
-        state.selectedCrime.law
-      )}
-    `;
+  if (
+    state.selectedCrime
+  ) {
+
+    crimeText =
+      `
+        ${escapeHtml(
+          state.selectedCrime.name
+        )},
+
+        artículo
+
+        ${escapeHtml(
+          state.selectedCrime.article
+        )}
+
+        de
+
+        ${escapeHtml(
+          state.selectedCrime.law
+        )}
+      `;
+
   }
 
 
-  preview.innerHTML = `
-    <h3>
-      ACTA POLICIAL
-    </h3>
-
-    <p>
-      <strong>
-        Fecha:
-      </strong>
-
-      ${escapeHtml(
-        state.fact.date || ""
-      )}
-
-      &nbsp;&nbsp;
-
-      <strong>
-        Hora:
-      </strong>
-
-      ${escapeHtml(
-        state.fact.time || ""
-      )}
-    </p>
+  preview.innerHTML =
+    `
+      <h3>
+        ACTA POLICIAL
+      </h3>
 
 
-    <p>
-      <strong>
-        Lugar:
-      </strong>
+      <p>
 
-      ${escapeHtml(
-        state.fact.place ||
-        "No especificado"
-      )}
-    </p>
+        <strong>
+          Fecha:
+        </strong>
 
+        ${escapeHtml(
+          state.fact.date || ""
+        )}
 
-    <p>
-      <strong>
-        Dependencia:
-      </strong>
+        &nbsp;&nbsp;
 
-      ${escapeHtml(
-        state.fact.station ||
-        "No especificada"
-      )}
-    </p>
+        <strong>
+          Hora:
+        </strong>
 
+        ${escapeHtml(
+          state.fact.time || ""
+        )}
 
-    <p>
-      <strong>
-        Tipo de procedimiento:
-      </strong>
-
-      ${escapeHtml(
-        state.fact.procedureType ||
-        "No especificado"
-      )}
-    </p>
+      </p>
 
 
-    <p>
-      <strong>
-        Agentes intervinientes:
-      </strong>
+      <p>
 
-      ${agents}
-    </p>
+        <strong>
+          Lugar:
+        </strong>
 
+        ${escapeHtml(
+          state.fact.place || ""
+        )}
 
-    <p>
-      <strong>
-        Persona aprehendida:
-      </strong>
-
-      ${escapeHtml(
-        personName ||
-        "No especificada"
-      )}
-
-      ${
-        state.person.dui
-          ?
-          `, DUI ${escapeHtml(
-            state.person.dui
-          )}`
-          :
-          ""
-      }
-    </p>
+      </p>
 
 
-    <p>
-      <strong>
-        Víctima:
-      </strong>
+      <p>
 
-      ${escapeHtml(
-        victimName ||
-        "No especificada"
-      )}
+        <strong>
+          Dependencia:
+        </strong>
 
-      ${
-        state.victim.dui
-          ?
-          `, DUI ${escapeHtml(
-            state.victim.dui
-          )}`
-          :
-          ""
-      }
-    </p>
+        ${escapeHtml(
+          state.fact.station || ""
+        )}
+
+      </p>
 
 
-    <p>
-      <strong>
-        Delito / base legal:
-      </strong>
+      <p>
 
-      ${crimeText}
-    </p>
+        <strong>
+          Tipo de procedimiento:
+        </strong>
 
+        ${escapeHtml(
+          state.fact.procedureType || ""
+        )}
 
-    <p>
-      <strong>
-        RELATO DE LOS HECHOS
-      </strong>
-    </p>
+      </p>
 
 
-    <p>
-      ${formatParagraph(
-        state.narrative ||
-        "Sin relato ingresado."
-      )}
-    </p>
+      <p>
+
+        <strong>
+          Agentes intervinientes:
+        </strong>
+
+        ${agents}
+
+      </p>
 
 
-    <p>
-      <strong>
-        Objetos / evidencias:
-      </strong>
+      <p>
 
-      <br>
+        <strong>
+          Persona aprehendida:
+        </strong>
 
-      ${formatParagraph(
-        state.evidence ||
-        "No se registraron objetos o evidencias."
-      )}
-    </p>
-  `;
+        ${escapeHtml(
+          personName
+        )}
+
+        ${
+          state.person.dui
+            ?
+            `, DUI ${escapeHtml(
+              state.person.dui
+            )}`
+            :
+            ""
+        }
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Víctima:
+        </strong>
+
+        ${escapeHtml(
+          victimName
+        )}
+
+        ${
+          state.victim.dui
+            ?
+            `, DUI ${escapeHtml(
+              state.victim.dui
+            )}`
+            :
+            ""
+        }
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Delito / base legal:
+        </strong>
+
+        ${crimeText}
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          RELATO DE LOS HECHOS
+        </strong>
+
+      </p>
+
+
+      <p>
+
+        ${formatParagraph(
+          state.narrative
+        )}
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Objetos / evidencias:
+        </strong>
+
+        <br>
+
+        ${formatParagraph(
+          state.evidence ||
+          "No se registraron objetos o evidencias."
+        )}
+
+      </p>
+    `;
+
 }
 
 
@@ -1352,16 +2517,24 @@ function renderPreview() {
 ========================================================= */
 
 function saveDraft() {
-  capturePerson();
 
   state.narrative =
-    getValue("narrative");
+    getValue(
+      "narrative"
+    );
+
 
   state.evidence =
-    getValue("evidence");
+    getValue(
+      "evidence"
+    );
+
+
+  capturePerson();
 
 
   const draft = {
+
     fact:
       state.fact,
 
@@ -1384,27 +2557,37 @@ function saveDraft() {
       state.evidence,
 
     savedAt:
-      new Date().toISOString()
+      new Date()
+        .toISOString()
+
   };
 
 
   try {
+
     localStorage.setItem(
       "siga_sv_draft",
       JSON.stringify(draft)
     );
+
 
     alert(
       "Borrador guardado correctamente en este dispositivo."
     );
 
   } catch (error) {
-    console.error(error);
+
+    console.error(
+      error
+    );
+
 
     alert(
       "No fue posible guardar el borrador."
     );
+
   }
+
 }
 
 
@@ -1413,7 +2596,9 @@ function saveDraft() {
 ========================================================= */
 
 function loadDraft() {
+
   try {
+
     const saved =
       localStorage.getItem(
         "siga_sv_draft"
@@ -1421,8 +2606,11 @@ function loadDraft() {
 
 
     if (!saved) {
+
       renderAgents();
+
       return;
+
     }
 
 
@@ -1433,6 +2621,7 @@ function loadDraft() {
     state.fact =
       draft.fact || {};
 
+
     state.agents =
       Array.isArray(
         draft.agents
@@ -1442,17 +2631,22 @@ function loadDraft() {
         :
         [];
 
+
     state.person =
       draft.person || {};
+
 
     state.victim =
       draft.victim || {};
 
+
     state.selectedCrime =
       draft.selectedCrime || null;
 
+
     state.narrative =
       draft.narrative || "";
+
 
     state.evidence =
       draft.evidence || "";
@@ -1465,45 +2659,55 @@ function loadDraft() {
     renderRecentDraft();
 
   } catch (error) {
+
     console.error(
       "Error recuperando borrador:",
       error
     );
 
+
     renderAgents();
+
   }
+
 }
 
 
 /* =========================================================
-   RESTAURAR CAMPOS DEL BORRADOR
+   RESTAURAR BORRADOR
 ========================================================= */
 
 function restoreDraftFields() {
+
   setValue(
     "factDate",
     state.fact.date || ""
   );
+
 
   setValue(
     "factTime",
     state.fact.time || ""
   );
 
+
   setValue(
     "factPlace",
     state.fact.place || ""
   );
+
 
   setValue(
     "station",
     state.fact.station || ""
   );
 
+
   setValue(
     "procedureType",
     state.fact.procedureType || ""
   );
+
 
   setValue(
     "internalReference",
@@ -1516,30 +2720,36 @@ function restoreDraftFields() {
     state.person.dui || ""
   );
 
+
   setValue(
     "personFirstName",
     state.person.firstName || ""
   );
+
 
   setValue(
     "personLastName",
     state.person.lastName || ""
   );
 
+
   setValue(
     "personBirthDate",
     state.person.birthDate || ""
   );
+
 
   setValue(
     "personCivilStatus",
     state.person.civilStatus || ""
   );
 
+
   setValue(
     "personOccupation",
     state.person.occupation || ""
   );
+
 
   setValue(
     "personAddress",
@@ -1552,20 +2762,24 @@ function restoreDraftFields() {
     state.victim.dui || ""
   );
 
+
   setValue(
     "victimFirstName",
     state.victim.firstName || ""
   );
+
 
   setValue(
     "victimLastName",
     state.victim.lastName || ""
   );
 
+
   setValue(
     "victimAddress",
     state.victim.address || ""
   );
+
 
   setValue(
     "victimRelation",
@@ -1578,17 +2792,23 @@ function restoreDraftFields() {
     state.narrative || ""
   );
 
+
   setValue(
     "evidence",
     state.evidence || ""
   );
 
 
-  if (state.selectedCrime) {
+  if (
+    state.selectedCrime
+  ) {
+
     selectCrime(
       state.selectedCrime
     );
+
   }
+
 }
 
 
@@ -1597,6 +2817,7 @@ function restoreDraftFields() {
 ========================================================= */
 
 function renderRecentDraft() {
+
   const recentActs =
     document.getElementById(
       "recentActs"
@@ -1617,36 +2838,42 @@ function renderRecentDraft() {
       .join(" ");
 
 
-  recentActs.innerHTML = `
-    <div
-      class="data-card"
-      style="text-align:left;"
-    >
+  recentActs.innerHTML =
+    `
+      <div
+        class="data-card"
+        style="
+          text-align:left;
+        "
+      >
 
-      <strong>
-        Borrador guardado
-      </strong>
+        <strong>
+          Borrador guardado
+        </strong>
 
-      <small>
-        ${
-          escapeHtml(
-            state.fact.date ||
-            "Sin fecha"
-          )
-        }
+        <small>
 
-        <br>
+          ${
+            escapeHtml(
+              state.fact.date ||
+              "Sin fecha"
+            )
+          }
 
-        ${
-          escapeHtml(
-            personName ||
-            "Persona no especificada"
-          )
-        }
-      </small>
+          <br>
 
-    </div>
-  `;
+          ${
+            escapeHtml(
+              personName ||
+              "Persona no especificada"
+            )
+          }
+
+        </small>
+
+      </div>
+    `;
+
 }
 
 
@@ -1655,75 +2882,102 @@ function renderRecentDraft() {
 ========================================================= */
 
 function getValue(id) {
+
   const element =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
+
 
   if (!element) {
     return "";
   }
 
+
   return String(
     element.value || ""
   ).trim();
+
 }
 
 
-function setValue(id, value) {
+function setValue(
+  id,
+  value
+) {
+
   const element =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
+
 
   if (!element) {
     return;
   }
 
+
   element.value =
     value || "";
+
 }
 
 
 /* =========================================================
-   SEGURIDAD BÁSICA PARA TEXTO MOSTRADO EN HTML
+   SEGURIDAD BÁSICA PARA TEXTO HTML
 ========================================================= */
 
 function escapeHtml(value) {
-  return String(value ?? "")
+
+  return String(
+    value ?? ""
+  )
+
     .replaceAll(
       "&",
       "&amp;"
     )
+
     .replaceAll(
       "<",
       "&lt;"
     )
+
     .replaceAll(
       ">",
       "&gt;"
     )
+
     .replaceAll(
       '"',
       "&quot;"
     )
+
     .replaceAll(
       "'",
       "&#039;"
     );
+
 }
 
 
 /* =========================================================
-   CONSERVAR SALTOS DE LÍNEA DEL RELATO
+   CONSERVAR SALTOS DE LÍNEA
 ========================================================= */
 
 function formatParagraph(value) {
-  return escapeHtml(value)
-    .replaceAll(
-      "\n",
-      "<br>"
-    );
+
+  return escapeHtml(
+    value
+  ).replaceAll(
+    "\n",
+    "<br>"
+  );
+
 }
 
 
 /* =========================================================
    FIN DE app.js
-   SIGA SV - BASE 1
+   SIGA SV - BASE 1.1
 ========================================================= */
