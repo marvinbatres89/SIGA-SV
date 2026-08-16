@@ -1,0 +1,41 @@
+*{box-sizing:border-box}
+:root{--navy:#0b2f66;--navy2:#08264f;--bg:#f2f5f9;--text:#172033;--muted:#667085;--border:#d6dee8;--danger:#b42318;--ok:#176b2e}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.topbar{position:sticky;top:0;z-index:30;background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 12px #0002}
+.topbar h1,.topbar p{margin:0}.topbar h1{font-size:24px}.topbar p{font-size:12px;opacity:.9}
+.app{max-width:900px;margin:auto;padding:16px}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 4px 16px #0000000d}
+.hidden{display:none!important}
+.primary,.secondary,.ghost,.preview-nav button,.voicebar button,.formatbar button{border:0;border-radius:9px;padding:11px 14px;font-weight:800}
+.primary{background:var(--navy);color:#fff}.secondary{background:#fff;color:var(--navy);border:1px solid var(--navy)}.ghost{background:#ffffff18;color:#fff;border:1px solid #ffffff55}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;position:sticky;top:73px;z-index:20;background:var(--bg);padding:6px 0}
+.steps button{border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--navy);padding:9px;font-weight:800}
+.steps small{font-weight:400;color:var(--muted)}
+h2{color:var(--navy);margin-top:0}h3{margin-top:24px;color:#243b63;border-bottom:1px solid #e6ebf1;padding-bottom:6px}
+.notice,.legal-note{background:#fff8df;border:1px solid #ecd583;border-radius:10px;padding:10px 12px;color:#66520e;font-size:13px}
+.legal-note{background:#fff1f0;border-color:#f0b4ae;color:#8e2a21}
+label{display:block;font-weight:800;font-size:13px;margin:13px 0}
+input,textarea,select{display:block;width:100%;margin-top:6px;border:1px solid #cbd5e1;border-radius:8px;padding:10px 11px;background:#fff;color:var(--text);outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--navy);box-shadow:0 0 0 3px #0b2f6612}
+.invalid{border-color:var(--danger)!important;background:#fff2f0!important}
+.grid2,.grid3{display:grid;gap:10px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}
+.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.repeat-card{border:1px solid var(--border);background:#fbfcfe;border-radius:10px;padding:12px;margin:10px 0}
+.repeat-card .remove{background:#fff;color:var(--danger);border:1px solid #e4a7a2;border-radius:8px;padding:7px 10px}
+.preview-controls{position:sticky;top:74px;z-index:25}
+.preview-nav,.voicebar,.formatbar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px}
+.preview-nav button,.voicebar button,.formatbar button{background:#eef3f9;color:var(--navy);border:1px solid #d6e0eb}
+.formatbar label{display:flex;align-items:center;gap:6px;margin:0}.formatbar select{width:auto;margin:0;padding:8px}
+.paper{width:8.5in;min-height:13in;margin:0 auto 25px;background:#fff;padding:.55in .65in;border:1px solid #d4d4d4;box-shadow:0 6px 24px #0002;font-family:Arial,sans-serif;font-size:11pt;line-height:1.35;text-align:justify;color:#111;outline:none}
+.paper p{margin:0 0 7px}.paper .heading{text-transform:uppercase;font-weight:700}
+.paper .person-key{text-transform:uppercase;text-decoration:underline;font-weight:700}
+.paper .arrest-key{font-weight:700;text-decoration:underline}
+.paper .section-title{text-transform:uppercase;font-weight:800;text-align:center;margin:12px 0 8px}
+.signatures{display:flex;flex-wrap:wrap;gap:28px 18px;justify-content:center;margin-top:38px}
+.signature{width:29%;min-width:170px;text-align:center}.signature .line{border-top:1px solid #111;margin-top:42px;padding-top:5px;font-weight:700;text-transform:uppercase}
+@media(max-width:760px){.app{padding:10px}.grid2,.grid3{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr);top:68px}.paper{width:100%;min-height:0;padding:22px 18px;font-size:11pt}.signature{width:45%;min-width:130px}.preview-controls{top:68px}.formatbar label{width:100%}}
+@page{size:8.5in 13in;margin:.55in .65in}
+@media print{body{background:#fff}.topbar,.preview-controls,#home,#wizard{display:none!important}.app{max-width:none;padding:0}.paper{width:auto;min-height:auto;margin:0;padding:0;border:0;box-shadow:none}.signature{page-break-inside:avoid}}
