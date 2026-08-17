@@ -1,0 +1,1227 @@
+/* =========================================================
+   SIGA SV
+   Sistema Inteligente de Gestión de Actas
+   ARCHIVO: style.css
+   VERSIÓN: V3 PILOTO
+========================================================= */
+
+
+/* =========================================================
+   CONFIGURACIÓN GENERAL
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --navy: #0b2f66;
+  --navy2: #08264f;
+  --bg: #f2f5f9;
+  --text: #172033;
+  --muted: #667085;
+  --border: #d6dee8;
+  --danger: #b42318;
+  --warn: #fff8df;
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+body {
+  margin: 0;
+
+  background: var(--bg);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  color: var(--text);
+}
+
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+
+button {
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   ENCABEZADO PRINCIPAL
+========================================================= */
+
+.topbar {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 30;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding:
+    14px
+    18px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--navy),
+      var(--navy2)
+    );
+
+  box-shadow:
+    0 3px 12px
+    rgba(0, 0, 0, 0.14);
+}
+
+
+.topbar h1,
+.topbar p {
+  margin: 0;
+}
+
+
+.topbar h1 {
+  font-size: 24px;
+}
+
+
+.topbar p {
+  margin-top: 2px;
+
+  font-size: 12px;
+
+  opacity: 0.90;
+}
+
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+========================================================= */
+
+.app {
+  width: 100%;
+
+  max-width: 920px;
+
+  margin: auto;
+
+  padding: 16px;
+}
+
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+.card {
+  margin-bottom: 14px;
+
+  padding: 18px;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 4px 16px
+    rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   VISIBILIDAD
+========================================================= */
+
+.hidden {
+  display: none !important;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.primary,
+.secondary,
+.ghost,
+.preview-nav button,
+.voicebar button,
+.formatbar button {
+  min-height: 43px;
+
+  padding:
+    11px
+    14px;
+
+  border: 0;
+
+  border-radius: 9px;
+
+  font-weight: 800;
+
+  transition:
+    transform 0.08s ease,
+    opacity 0.15s ease;
+}
+
+
+.primary:active,
+.secondary:active,
+.ghost:active,
+.preview-nav button:active,
+.voicebar button:active,
+.formatbar button:active {
+  transform: scale(0.985);
+}
+
+
+.primary {
+  background: var(--navy);
+
+  color: #ffffff;
+}
+
+
+.secondary {
+  background: #ffffff;
+
+  color: var(--navy);
+
+  border:
+    1px solid
+    var(--navy);
+}
+
+
+.ghost {
+  background:
+    rgba(255, 255, 255, 0.09);
+
+  color: #ffffff;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.33);
+}
+
+
+/* =========================================================
+   NAVEGACIÓN POR PARTES
+========================================================= */
+
+.steps {
+  position: sticky;
+
+  top: 73px;
+
+  z-index: 20;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 7px;
+
+  margin-bottom: 14px;
+
+  padding:
+    6px
+    0;
+
+  background: var(--bg);
+}
+
+
+.steps button {
+  min-height: 58px;
+
+  padding: 9px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: var(--navy);
+
+  font-weight: 800;
+}
+
+
+.steps small {
+  color: var(--muted);
+
+  font-size: 10px;
+
+  font-weight: 400;
+
+  line-height: 1.25;
+}
+
+
+/* =========================================================
+   TÍTULOS
+========================================================= */
+
+h2 {
+  margin-top: 0;
+
+  color: var(--navy);
+}
+
+
+h3 {
+  margin-top: 24px;
+
+  padding-bottom: 6px;
+
+  color: #243b63;
+
+  border-bottom:
+    1px solid
+    #e6ebf1;
+}
+
+
+/* =========================================================
+   AVISOS
+========================================================= */
+
+.notice,
+.legal-note,
+.reference-note {
+  padding:
+    10px
+    12px;
+
+  border:
+    1px solid
+    #ecd583;
+
+  border-radius: 10px;
+
+  background:
+    var(--warn);
+
+  color: #66520e;
+
+  font-size: 13px;
+
+  line-height: 1.45;
+}
+
+
+.legal-note {
+  background: #fff1f0;
+
+  border-color: #f0b4ae;
+
+  color: #8e2a21;
+}
+
+
+.reference-note {
+  background: #eef6ff;
+
+  border-color: #aac7eb;
+
+  color: #234e7a;
+}
+
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+label {
+  display: block;
+
+  margin:
+    13px
+    0;
+
+  font-size: 13px;
+
+  font-weight: 800;
+}
+
+
+input,
+textarea,
+select {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 6px;
+
+  padding:
+    10px
+    11px;
+
+  border:
+    1px solid
+    #cbd5e1;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: var(--text);
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+
+input {
+  min-height: 44px;
+}
+
+
+textarea {
+  line-height: 1.45;
+
+  resize: vertical;
+}
+
+
+select {
+  min-height: 44px;
+}
+
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--navy);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(11, 47, 102, 0.07);
+}
+
+
+input[readonly] {
+  background: #f7f9fc;
+
+  color: #344054;
+}
+
+
+/* =========================================================
+   CAMPO CON ERROR
+========================================================= */
+
+.invalid {
+  border-color:
+    var(--danger) !important;
+
+  background:
+    #fff2f0 !important;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(180, 35, 24, 0.06) !important;
+}
+
+
+/* =========================================================
+   CUADRÍCULAS
+========================================================= */
+
+.grid2,
+.grid3 {
+  display: grid;
+
+  gap: 10px;
+}
+
+
+.grid2 {
+  grid-template-columns:
+    repeat(2, 1fr);
+}
+
+
+.grid3 {
+  grid-template-columns:
+    repeat(3, 1fr);
+}
+
+
+/* =========================================================
+   BOTONES DE NAVEGACIÓN
+========================================================= */
+
+.actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 20px;
+}
+
+
+.actions.compact {
+  margin-top: 8px;
+}
+
+
+/* =========================================================
+   TARJETAS REPETIBLES
+   AUXILIARES / ANEXOS / CAPTORES
+========================================================= */
+
+.repeat-card {
+  margin:
+    10px
+    0;
+
+  padding: 12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  background: #fbfcfe;
+}
+
+
+.repeat-card .remove {
+  padding:
+    7px
+    10px;
+
+  border:
+    1px solid
+    #e4a7a2;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: var(--danger);
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   REGISTRO DE AGENTES / CAPTORES
+========================================================= */
+
+.registry {
+  display: grid;
+
+  gap: 7px;
+
+  margin-top: 10px;
+}
+
+
+.registry-item {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding: 9px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 9px;
+
+  background: #fbfcfe;
+}
+
+
+.registry-item small {
+  color: var(--muted);
+}
+
+
+.registry-actions {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 5px;
+}
+
+
+.registry-item button {
+  padding:
+    6px
+    8px;
+
+  border:
+    1px solid
+    #ccd6e2;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: var(--navy);
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   SUGERENCIAS DE DELITOS
+========================================================= */
+
+.suggestions {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  margin-top: 6px;
+}
+
+
+.suggestions button {
+  width: 100%;
+
+  padding: 10px;
+
+  text-align: left;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: var(--text);
+}
+
+
+.suggestions button:hover {
+  background: #f6f9fc;
+}
+
+
+.suggestions small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: var(--muted);
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   DUI / CÁMARA
+========================================================= */
+
+.dui-row {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    auto;
+
+  gap: 10px;
+
+  align-items: end;
+}
+
+
+.dui-actions {
+  padding-bottom: 13px;
+}
+
+
+.scan-panel {
+  margin-top: 8px;
+
+  padding: 10px;
+
+  border:
+    1px dashed
+    #9db3c9;
+
+  border-radius: 10px;
+
+  background: #f8fbff;
+}
+
+
+.scan-panel img {
+  display: block;
+
+  max-width: 100%;
+
+  max-height: 220px;
+
+  margin: auto;
+
+  border-radius: 8px;
+
+  object-fit: contain;
+}
+
+
+.scan-panel p {
+  color: var(--muted);
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   BOTÓN FLOTANTE DE VISTA PREVIA
+========================================================= */
+
+.floating-tools {
+  position: fixed;
+
+  right: 18px;
+
+  bottom: 22px;
+
+  z-index: 80;
+
+  width: 58px;
+
+  height: 58px;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: var(--navy);
+
+  color: #ffffff;
+
+  font-size: 25px;
+
+  box-shadow:
+    0 6px 22px
+    rgba(0, 0, 0, 0.34);
+}
+
+
+/* =========================================================
+   MENÚ FLOTANTE
+========================================================= */
+
+.floating-menu {
+  position: fixed;
+
+  right: 16px;
+
+  bottom: 90px;
+
+  z-index: 79;
+
+  width:
+    min(
+      450px,
+      calc(100vw - 32px)
+    );
+
+  max-height: 72vh;
+
+  overflow: auto;
+
+  padding: 14px;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 10px 35px
+    rgba(0, 0, 0, 0.25);
+}
+
+
+.floating-menu h3 {
+  margin-top: 0;
+}
+
+
+/* =========================================================
+   CONTROLES DE VISTA PREVIA
+========================================================= */
+
+.preview-nav,
+.voicebar,
+.formatbar {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-bottom: 9px;
+}
+
+
+.preview-nav button,
+.voicebar button,
+.formatbar button {
+  background: #eef3f9;
+
+  color: var(--navy);
+
+  border:
+    1px solid
+    #d6e0eb;
+}
+
+
+.formatbar label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  margin: 0;
+}
+
+
+.formatbar select {
+  width: auto;
+
+  min-height: 36px;
+
+  margin: 0;
+
+  padding: 8px;
+}
+
+
+/* =========================================================
+   HOJA DEL ACTA
+   FORMATO OFICIO 8.5 x 13
+========================================================= */
+
+.paper {
+  width: 8.5in;
+
+  min-height: 13in;
+
+  margin:
+    0
+    auto
+    25px;
+
+  padding:
+    0.55in
+    0.65in;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #d4d4d4;
+
+  box-shadow:
+    0 6px 24px
+    rgba(0, 0, 0, 0.14);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 11pt;
+
+  line-height: 1.25;
+
+  text-align: justify;
+
+  color: #000000;
+
+  outline: none;
+}
+
+
+/* =========================================================
+   REGLA PRINCIPAL:
+   TODO EL DOCUMENTO EN NEGRO
+========================================================= */
+
+.paper,
+.paper * {
+  color: #000000;
+}
+
+
+/* =========================================================
+   TEXTO CORRIDO
+========================================================= */
+
+.paper p {
+  margin:
+    0
+    0
+    4px;
+
+  padding: 0;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+   MAYÚSCULAS SIN SUBRAYADO
+========================================================= */
+
+.paper .header-fixed {
+  text-transform: uppercase;
+
+  font-weight: 400;
+
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   NOMBRES CLAVE
+   MAYÚSCULAS + SUBRAYADO
+========================================================= */
+
+.paper .person-key {
+  text-transform: uppercase;
+
+  text-decoration: underline;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   FRAGMENTO IMPORTANTE
+   NEGRITA + SUBRAYADO
+========================================================= */
+
+.paper .important-key {
+  font-weight: 700;
+
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   TÍTULO RELATO DE LOS HECHOS
+========================================================= */
+
+.paper .section-title {
+  text-transform: uppercase;
+
+  font-weight: 800;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   FIRMAS HORIZONTALES
+========================================================= */
+
+.paper .signatures {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap:
+    28px
+    18px;
+
+  margin-top: 36px;
+}
+
+
+.paper .signature {
+  width: 29%;
+
+  min-width: 170px;
+
+  text-align: center;
+}
+
+
+.paper .signature .line {
+  margin-top: 42px;
+
+  padding-top: 5px;
+
+  border-top:
+    1px solid
+    #111111;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   TELÉFONOS Y TABLET
+========================================================= */
+
+@media
+(max-width: 760px) {
+
+  .app {
+    padding: 10px;
+  }
+
+
+  .grid2,
+  .grid3,
+  .dui-row {
+    grid-template-columns: 1fr;
+  }
+
+
+  .dui-actions {
+    padding-bottom: 0;
+  }
+
+
+  .steps {
+    top: 68px;
+
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .paper {
+    width: 100%;
+
+    min-height: 0;
+
+    padding:
+      22px
+      18px;
+
+    font-size: 11pt;
+  }
+
+
+  .paper .signature {
+    width: 45%;
+
+    min-width: 130px;
+  }
+
+
+  .floating-menu {
+    bottom: 88px;
+  }
+
+
+  .formatbar label {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   TELÉFONOS MUY PEQUEÑOS
+========================================================= */
+
+@media
+(max-width: 390px) {
+
+  .topbar {
+    padding:
+      12px
+      13px;
+  }
+
+
+  .topbar h1 {
+    font-size: 21px;
+  }
+
+
+  .card {
+    padding: 14px;
+  }
+
+
+  .steps {
+    gap: 5px;
+  }
+
+
+  .steps button {
+    padding:
+      7px
+      5px;
+  }
+
+
+  .paper {
+    padding:
+      18px
+      14px;
+  }
+
+
+  .paper .signature {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   CONFIGURACIÓN DE PÁGINA PARA IMPRESIÓN
+   TAMAÑO OFICIO
+========================================================= */
+
+@page {
+  size:
+    8.5in
+    13in;
+
+  margin:
+    0.55in
+    0.65in;
+}
+
+
+/* =========================================================
+   IMPRESIÓN / PDF
+========================================================= */
+
+@media print {
+
+  body {
+    background: #ffffff;
+  }
+
+
+  .topbar,
+  .floating-tools,
+  .floating-menu,
+  #home,
+  #wizard {
+    display: none !important;
+  }
+
+
+  .app {
+    max-width: none;
+
+    padding: 0;
+  }
+
+
+  #preview {
+    display: block !important;
+  }
+
+
+  .paper {
+    width: auto;
+
+    min-height: auto;
+
+    margin: 0;
+
+    padding: 0;
+
+    border: 0;
+
+    box-shadow: none;
+
+    color: #000000;
+
+    font-family:
+      Arial,
+      Helvetica,
+      sans-serif;
+  }
+
+
+  .paper * {
+    color: #000000 !important;
+  }
+
+
+  .paper .signature {
+    page-break-inside: avoid;
+  }
+
+}
+
+
+/* =========================================================
+   FIN DE style.css
+   SIGA SV V3 PILOTO
+========================================================= */
