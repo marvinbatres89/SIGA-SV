@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b2f66">
+  <title>SIGA SV V3 PILOTO</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1>SIGA SV</h1>
+    <p>Sistema Inteligente de Gestión de Actas · V3 PILOTO</p>
+  </div>
+  <button id="homeBtn" class="ghost">Inicio</button>
+</header>
+
+<main class="app">
+  <section id="home" class="card">
+    <h2>Nueva acta de aprehensión</h2>
+    <p>Complete las cuatro partes. SIGA SV reutiliza los datos, convierte cifras a letras en la redacción y prepara una vista previa en formato Oficio.</p>
+    <button id="newAct" class="primary">+ NUEVA ACTA</button>
+    <button id="resumeDraft" class="secondary">ABRIR BORRADOR</button>
+  </section>
+
+  <section id="wizard" class="hidden">
+    <nav class="steps">
+      <button data-goto="part1">Parte 1<br><small>Encabezado y generales</small></button>
+      <button data-goto="part2">Parte 2<br><small>Relato y aprehensión</small></button>
+      <button data-goto="part3">Parte 3<br><small>Derechos y cierre</small></button>
+      <button data-goto="part4">Parte 4<br><small>Anexos y firmas</small></button>
+    </nav>
+
+    <section id="part1" class="part card">
+      <h2>Parte 1 · Encabezado, agentes y aprehendido</h2>
+      <p class="notice">Los campos con * son obligatorios para avanzar.</p>
+
+      <h3>Encabezado</h3>
+      <label>Estación / dependencia *<input id="station" type="text" value="ESTACIÓN POLICIAL PUENTE CUSCATLÁN"></label>
+      <label>Dirección institucional / ubicación *<textarea id="stationAddress" rows="3">ubicada sobre el kilómetro ochenta y cinco de la carretera Panamericana, del caserío Miralempa, cantón El Rebelde, municipio y departamento de San Vicente</textarea></label>
+      <div class="grid2">
+        <label>Fecha del acta *<input id="actDate" type="date"></label>
+        <label>Hora del acta *<input id="actTime" type="time"></label>
+      </div>
+
+      <h3>Agente principal</h3>
+      <div class="grid3">
+        <label>Categoría / grado *<input id="leadRank" type="text" placeholder="Agente, sargento, soldado..."></label>
+        <label>Nombre completo *<input id="leadName" type="text"></label>
+        <label>ONI *<input id="leadOni" type="text" inputmode="numeric"></label>
+      </div>
+
+      <h3>Auxiliares</h3>
+      <div id="helpers"></div>
+      <button id="addHelper" type="button" class="secondary">+ AGREGAR AUXILIAR</button>
+
+      <h3>Generales del aprehendido</h3>
+      <div class="grid2">
+        <label>Nombre completo *<input id="detaineeName" type="text"></label>
+        <label>¿Posee alias? *<select id="aliasMode"><option value="">Seleccione</option><option value="yes">Sí, posee alias</option><option value="no">No posee alias</option></select></label>
+        <label id="aliasWrap" class="hidden">Alias *<input id="alias" type="text" placeholder="Ej. EL PIZUCA"></label>
+        <label>DUI *<input id="detaineeDui" type="text" inputmode="numeric" placeholder="00000000-0"><button id="scanDui" type="button" class="secondary mini">📷 ESCANEAR DUI</button><input id="duiCamera" class="hidden" type="file" accept="image/*" capture="environment"></label><div id="duiScanPanel" class="scan-panel hidden"><img id="duiPreview" alt="Vista previa DUI"><p id="duiScanStatus">Revise la imagen. Si el dispositivo admite lectura de texto, SIGA SV intentará detectar el número; de lo contrario puede confirmarlo manualmente.</p><button id="tryReadDui" type="button" class="secondary">INTENTAR LEER DUI</button><button id="discardDuiImage" type="button" class="secondary">DESCARTAR IMAGEN</button></div>
+        <label>Fecha de nacimiento *<input id="birthDate" type="date"></label>
+        <label>Edad <input id="age" type="text" readonly placeholder="Automática"></label>
+        <label>Estado civil *<input id="civilStatus" type="text"></label>
+        <label>Profesión / oficio *<input id="occupation" type="text"></label>
+      </div>
+      <label>Residencia / domicilio *<textarea id="detaineeAddress" rows="3"></textarea></label>
+      <div class="grid2">
+        <label>Municipio / distrito *<input id="detaineeMunicipality" type="text"></label>
+        <label>Departamento *<input id="detaineeDepartment" type="text"></label>
+      </div>
+      <label>Características físicas *<textarea id="physicalFeatures" rows="4" placeholder="Piel, cabello, ojos, complexión, estatura aproximada y otras características."></textarea></label>
+      <label>Vestimenta al momento de la aprehensión *<textarea id="clothing" rows="4"></textarea></label>
+
+      <h3>Filiación</h3>
+      <div class="grid2">
+        <label>Nombre de la madre *<input id="motherName" type="text"></label>
+        <label>Edad de la madre <input id="motherAge" type="number" min="0"></label>
+        <label>Nombre del padre *<input id="fatherName" type="text"></label>
+        <label>Edad del padre <input id="fatherAge" type="number" min="0"></label>
+      </div>
+      <label>Residencia de los padres *<textarea id="parentsAddress" rows="3"></textarea></label>
+
+      <h3>Delito y base legal</h3>
+      <div class="grid3">
+        <label>Delito *<input id="crimeName" list="crimeList" placeholder="Escriba o seleccione"></label>
+        <label>Artículo automático *<input id="crimeArticle" type="text" readonly placeholder="Automático"></label>
+        <label>Ley automática *<input id="crimeLaw" type="text" readonly placeholder="Automática"></label>
+      </div>
+      <datalist id="crimeList">
+        <option value="Lesiones"></option>
+        <option value="Lesiones graves"></option>
+        <option value="Desobediencia en caso de medidas cautelares o de protección"></option>
+      </datalist>
+      <div id="crimeSuggestions" class="suggestions"></div><p class="legal-note">Catálogo jurídico piloto: seleccione el delito y SIGA SV completará artículo y ley. Verifique la referencia legal antes de uso operativo.</p>
+
+      <h3>Víctima / persona perjudicada</h3>
+      <label>Tipo de víctima *
+        <select id="victimMode">
+          <option value="">Seleccione</option>
+          <option value="person">Persona determinada</option>
+          <option value="public">Interés / bien jurídico público</option>
+          <option value="none">No aplica víctima individual</option>
+        </select>
+      </label>
+      <div id="victimPersonFields" class="hidden">
+        <div class="grid2">
+          <label>Nombre completo *<input id="victimName" type="text"></label>
+          <label>Edad <input id="victimAge" type="number" min="0"></label>
+        </div>
+        <label>Residencia <textarea id="victimAddress" rows="3"></textarea></label>
+      </div>
+      <div id="victimPublicFields" class="hidden">
+        <label>Bien jurídico / interés afectado *<input id="publicInterest" type="text" placeholder="Ej. la Paz Pública"></label>
+      </div>
+
+      <div class="actions">
+        <button data-next="part2" class="primary">SIGUIENTE →</button>
+      </div>
+    </section>
+
+    <section id="part2" class="part card hidden">
+      <h2>Parte 2 · Relato de los hechos y aprehensión</h2>
+      <p class="notice">El relato es libre. La fecha, hora y lugar de aprehensión se insertan automáticamente en el párrafo especial.</p>
+
+      <h3>Relato de referencia</h3>
+      <p class="reference-note">SOLO REFERENCIA: SIGA SV no copiará ni reutilizará automáticamente ningún dato de este texto.</p>
+      <textarea id="referenceStory" rows="10" placeholder="Pegue aquí un relato anterior únicamente como guía..."></textarea>
+      <button id="clearReference" type="button" class="secondary">LIMPIAR REFERENCIA</button>
+
+      <label>RELATO DE LOS HECHOS DEL ACTA ACTUAL *<textarea id="story" rows="16" placeholder="Escriba aquí únicamente los hechos del caso actual."></textarea></label>
+
+      <h3>Momento exacto de la aprehensión</h3>
+      <div class="grid2">
+        <label>Fecha de aprehensión *<input id="arrestDate" type="date"></label>
+        <label>Hora de aprehensión *<input id="arrestTime" type="time"></label>
+      </div>
+      <label>Lugar exacto de aprehensión *<textarea id="arrestPlace" rows="3" placeholder="Ej. interior de la vivienda de..."></textarea></label>
+      <div class="grid2">
+        <label>Caserío <input id="arrestHamlet" type="text"></label>
+        <label>Cantón <input id="arrestCanton" type="text"></label>
+        <label>Distrito / municipio *<input id="arrestMunicipality" type="text"></label>
+        <label>Departamento *<input id="arrestDepartment" type="text"></label>
+      </div>
+
+      <div class="actions">
+        <button data-back="part1" class="secondary">← ANTERIOR</button>
+        <button data-next="part3" class="primary">SIGUIENTE →</button>
+      </div>
+    </section>
+
+    <section id="part3" class="part card hidden">
+      <h2>Parte 3 · Derechos, objetos y cierre</h2>
+
+      <h3>Bloque automático de derechos</h3>
+      <p class="notice">Este texto se inserta automáticamente. En esta versión piloto puede editarse antes de generar la vista previa.</p>
+      <textarea id="rightsText" rows="10">al momento de su aprehensión se le leyeron los derechos y garantías que la ley le confiere, de conformidad a lo establecido en los artículos doce de la Constitución de la República de El Salvador y ochenta y dos del Código Procesal Penal vigente, quien manifestó que los entiende y los comprende. Y al preguntarle si nombraría un defensor particular para que lo asista en el presente caso, este manifestó que no, por carecer de recursos económicos para el pago de sus honorarios, por lo que se le hizo saber que se le solicitará un defensor público a la Procuraduría General de la República de El Salvador para que lo asista en el presente caso.</textarea>
+
+      <h3>Depósito e incautación</h3>
+      <label>Situación de objetos *
+        <select id="objectsMode">
+          <option value="">Seleccione</option>
+          <option value="none">No deja objetos en depósito ni incautación</option>
+          <option value="yes">Sí deja objetos</option>
+        </select>
+      </label>
+      <div id="objectsFields" class="hidden">
+        <label>Objetos en calidad de depósito<textarea id="depositObjects" rows="4"></textarea></label>
+        <label>Objetos en calidad de incautación<textarea id="seizedObjects" rows="4"></textarea></label>
+      </div>
+
+      <h3>Aviso de la aprehensión</h3>
+      <label>¿A quién se le dará aviso? *
+        <select id="noticeMode">
+          <option value="">Seleccione</option>
+          <option value="nobody">A nadie</option>
+          <option value="person">A una persona determinada</option>
+        </select>
+      </label>
+      <div id="noticeNobodyFields" class="hidden">
+        <label>Motivo / manifestación *<input id="noticeNobodyReason" type="text" value="porque su familia ya tenía conocimiento"></label>
+      </div>
+      <div id="noticePersonFields" class="hidden">
+        <div class="grid2">
+          <label>Nombre *<input id="noticePersonName" type="text"></label>
+          <label>Parentesco / relación <input id="noticeRelation" type="text"></label>
+        </div>
+      </div>
+
+      <h3>Firma del aprehendido</h3>
+      <label>¿El aprehendido firma? *
+        <select id="detaineeSigns">
+          <option value="">Seleccione</option>
+          <option value="yes">Sí firma</option>
+          <option value="no">No firma</option>
+        </select>
+      </label>
+      <label id="noSignReasonWrap" class="hidden">Motivo de no firma<input id="noSignReason" type="text" value="por no querer hacerlo"></label>
+
+      <h3>Observación final</h3>
+      <label>Observación adicional <textarea id="finalObservation" rows="4" placeholder="Opcional"></textarea></label>
+
+      <div class="actions">
+        <button data-back="part2" class="secondary">← ANTERIOR</button>
+        <button data-next="part4" class="primary">SIGUIENTE →</button>
+      </div>
+    </section>
+
+    <section id="part4" class="part card hidden">
+      <h2>Parte 4 · Anexos y firmas</h2>
+
+      <h3>Anexos</h3>
+      <div id="annexes"></div>
+      <button id="addAnnex" type="button" class="secondary">+ AGREGAR ANEXO</button>
+      <div class="annex-presets"><button type="button" class="secondary mini" data-annex-preset="Hoja de chequeo clínico">Hoja de chequeo clínico</button><button type="button" class="secondary mini" data-annex-preset="Acta de incautación">Acta de incautación</button><button type="button" class="secondary mini" data-annex-preset="Hoja de derechos del imputado">Hoja de derechos del imputado</button></div>
+
+      <h3>Registro de captores</h3><div class="grid3"><label>Grado / categoría<input id="registryRank" type="text"></label><label>Nombre completo<input id="registryName" type="text"></label><label>ONI<input id="registryOni" type="text"></label></div><button id="saveCaptorName" type="button" class="secondary">GUARDAR CAPTOR</button><div id="captorRegistry" class="registry"></div><h3>Firmas horizontales</h3>
+      <p class="notice">El aprehendido aparece primero. Agregue únicamente la cantidad de captores que correspondan.</p>
+      <div id="captors"></div>
+      <button id="addCaptor" type="button" class="secondary">+ AGREGAR CAPTOR</button>
+
+      <div class="actions">
+        <button data-back="part3" class="secondary">← ANTERIOR</button>
+        <button id="previewBtn" class="primary">GENERAR VISTA PREVIA →</button>
+      </div>
+    </section>
+  </section>
+
+  <section id="preview" class="hidden">
+    <button id="floatingTools" class="floating-tools" aria-label="Herramientas">☰</button>
+    <div id="floatingMenu" class="floating-menu hidden">
+      <h3>Herramientas</h3>
+      <div class="preview-nav"><button data-edit="part1">Editar Parte 1</button><button data-edit="part2">Editar Parte 2</button><button data-edit="part3">Editar Parte 3</button><button data-edit="part4">Editar Parte 4</button></div>
+      <div class="voicebar"><button id="speak">🔊 Escuchar</button><button id="pauseVoice">⏸ Pausar</button><button id="resumeVoice">▶ Continuar</button><button id="stopVoice">🔇 Detener</button></div>
+      <div class="formatbar"><label>Fuente <select id="fontFamily"><option>Arial</option></select></label><label>Tamaño <select id="fontSize"><option value="11" selected>11</option></select></label><button id="selectAllAct">Seleccionar acta</button><button data-format="bold"><b>B</b></button><button data-format="underline"><u>U</u></button><button id="uppercaseSelection">ABC</button><button id="resetFormat">Restablecer</button><button id="reviewText">✓ Revisar texto</button></div><p id="reviewStatus" class="review-status">Corrector del navegador activo. Puede ejecutar una revisión adicional antes de exportar.</p>
+      <div class="actions"><button id="saveDraft" class="secondary">GUARDAR BORRADOR</button><button id="exportWord" class="secondary">EXPORTAR WORD</button><button id="printAct" class="primary">IMPRIMIR / PDF</button></div>
+    </div>
+
+    <article id="acta" class="paper" contenteditable="true" spellcheck="true"></article>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
